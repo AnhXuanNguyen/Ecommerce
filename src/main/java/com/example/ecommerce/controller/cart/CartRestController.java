@@ -50,6 +50,9 @@ public class CartRestController {
     }
     @PutMapping("/add")
     public ResponseEntity<?> addProduct(@RequestBody ItemCartForm itemCartForm) {
+        if (itemCartForm.getProduct().getQuantity() < itemCartForm.getQuantity()){
+            return new ResponseEntity<>("Sản phẩm không đủ số lượng", HttpStatus.NO_CONTENT);
+        }
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         String username = userDetails.getUsername();
@@ -61,26 +64,29 @@ public class CartRestController {
         if (!currentCart.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        Long totalMoney = currentCart.get().getTotalMoney();
         boolean check = false;
         for (int i = 0; i < currentCart.get().getItemCarts().size(); i++){
             ItemCart itemCart = currentCart.get().getItemCarts().get(i);
             Product product = itemCartForm.getProduct();
             if (itemCart.getProduct().getId() == product.getId()){
-                Long quantity = itemCartForm.getQuantity() + itemCart.getQuantity();
+                Long money = itemCart.getQuantity() * itemCart.getProduct().getPrice();
+                totalMoney -= money;
+                Long quantity = itemCartForm.getQuantity();
                 itemCart.setQuantity(quantity);
+                money = product.getPrice() * quantity;
+                totalMoney += money;
                 itemCart.setDate(LocalDate.now());
-                itemCartForm.setQuantity(quantity);
+                currentCart.get().setTotalMoney(totalMoney);
                 check = true;
             }
-        }
-        if (itemCartForm.getProduct().getQuantity() < itemCartForm.getQuantity()){
-            return new ResponseEntity<>("Sản phẩm không đủ số lượng", HttpStatus.NO_CONTENT);
         }
         if (check){
             return new ResponseEntity<>(cartService.save(currentCart.get()), HttpStatus.ACCEPTED);
         }
         ItemCart itemCart = iItemCartService.save(new ItemCart());
         itemCart.setCart(currentCart.get());
+        itemCart.setComment(itemCartForm.getComment());
         itemCart.setProduct(itemCartForm.getProduct());
         itemCart.setQuantity(itemCartForm.getQuantity());
         itemCart.setDate(LocalDate.now());
@@ -115,6 +121,7 @@ public class CartRestController {
                 return new ResponseEntity<>("Số tiền trong tài khoản không đủ, vui lòng nạp thêm tiền vào tài khoản", HttpStatus.NO_CONTENT);
             }
             product.setQuantity(product.getQuantity() - quantity);
+            product.setCountBuy(product.getCountBuy() + 1);
             shop.setTurnover(shop.getTurnover() + money);
             currentCart.get().setTotalMoney(currentCart.get().getTotalMoney() - money);
             currentUser.get().setWallet(currentUser.get().getWallet() - money);

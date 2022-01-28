@@ -1,6 +1,5 @@
 package com.example.ecommerce.model.cart;
 
-import com.example.ecommerce.model.product.Product;
 import com.example.ecommerce.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;

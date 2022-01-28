@@ -3,6 +3,7 @@ package com.example.ecommerce.controller.shop;
 import com.example.ecommerce.enums.EnumFollowShop;
 import com.example.ecommerce.enums.EnumRoles;
 import com.example.ecommerce.enums.EnumShop;
+import com.example.ecommerce.enums.EnumShopType;
 import com.example.ecommerce.model.dto.shop.ShopCreate;
 import com.example.ecommerce.model.role.Role;
 import com.example.ecommerce.model.shop.Shop;
@@ -42,7 +43,7 @@ public class ShopRestController {
         return new ResponseEntity<>(shopService.save(currentShop.get()), HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<Shop> save(@RequestBody ShopCreate shopCreate){
+    public ResponseEntity<?> save(@RequestBody ShopCreate shopCreate){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         String username = userDetails.getUsername();
@@ -50,19 +51,38 @@ public class ShopRestController {
         if (!currentUser.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentUser.get().getRoles().add(new Role(3L, EnumRoles.ROLE_PROVIDER));
-        Shop shop = new Shop();
-        shop.setName(shopCreate.getName());
-        shop.setDescription(shopCreate.getDescription());
-        shop.setViewShop(0L);
-        shop.setCountFollow(0L);
-        shop.setUser(currentUser.get());
-        shop.setStatus(EnumShop.ACTIVITY);
-        shop.setStartOpen(LocalDate.now());
-        shop.setAvatar(shopCreate.getAvatar());
-        shop.setOwnerOrFollow(EnumFollowShop.OWNER);
-        shop.setTurnover(0L);
-        return new ResponseEntity<>(shopService.save(shop), HttpStatus.ACCEPTED);
+        int check = 0;
+        for (Role role : currentUser.get().getRoles()){
+            if (role.getName() == EnumRoles.ROLE_PROVIDER){
+                check = 1;
+            }
+            if (role.getName() == EnumRoles.ROLE_VIP){
+                check = 2;
+                break;
+            }
+        }
+        if (check == 0 || check == 2){
+            if (check == 0){
+                currentUser.get().getRoles().add(new Role(3L, EnumRoles.ROLE_PROVIDER));
+            }
+            if (check == 2 && currentUser.get().getShops().size() >= 5){
+                return new ResponseEntity<>("Đã đạt giới hạn tạo shop", HttpStatus.NO_CONTENT);
+            }
+            Shop shop = new Shop();
+            shop.setName(shopCreate.getName());
+            shop.setDescription(shopCreate.getDescription());
+            shop.setViewShop(0L);
+            shop.setCountFollow(0L);
+            shop.setUser(currentUser.get());
+            shop.setStatus(EnumShop.ACTIVITY);
+            shop.setStartOpen(LocalDate.now());
+            shop.setAvatar(shopCreate.getAvatar());
+            shop.setOwnerOrFollow(EnumFollowShop.OWNER);
+            shop.setTurnover(0L);
+            shop.setType(EnumShopType.NORMAL);
+            return new ResponseEntity<>(shopService.save(shop), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>("Hãy trở thành VIP để tạo thêm shop mới", HttpStatus.NO_CONTENT);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteShop(@PathVariable Long id){

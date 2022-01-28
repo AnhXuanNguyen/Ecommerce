@@ -21,6 +21,7 @@ public class ItemCart {
     private Product product;
     private Long quantity;
     private LocalDate date;
+    private String comment;
     @JsonIgnore
     @ManyToOne(targetEntity = Cart.class)
     private Cart cart;

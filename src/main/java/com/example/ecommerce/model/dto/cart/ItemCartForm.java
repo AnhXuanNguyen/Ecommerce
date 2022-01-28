@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class ItemCartForm {
     private Product product;
     private Long quantity;
+    private String comment;
 }

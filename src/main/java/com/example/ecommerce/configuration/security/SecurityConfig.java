@@ -79,6 +79,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             roleProvider.setId(3L);
             roleProvider.setName(EnumRoles.ROLE_PROVIDER);
             roleService.save(roleProvider);
+            Role roleVip = new Role();
+            roleVip.setId(4L);
+            roleProvider.setName(EnumRoles.ROLE_VIP);
         }
         if (users.isEmpty()){
             User userAdmin = new User();
