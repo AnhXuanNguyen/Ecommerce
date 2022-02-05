@@ -28,6 +28,8 @@ public class Product{
     private Long price;
     private Long quantity;
     private Long countBuy;
+    @Lob
+    @Column(columnDefinition = "varchar(5000)")
     private String description;
     private LocalDate dayUpdate;
     @ManyToOne(targetEntity = Origin.class)

@@ -54,4 +54,9 @@ public class UserService implements IUserService{
         }
         return UserPrincipal.build(userOptional.get());
     }
+
+    @Override
+    public Optional<User> findUserByMyShopId(Long myShopId) {
+        return userRepository.findUserByMyShopId(myShopId);
+    }
 }

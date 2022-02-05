@@ -33,12 +33,8 @@ public class Shop {
     private Long turnover;
     private EnumShop status;
     private EnumShopType type;
-    private EnumFollowShop ownerOrFollow;
     private String description;
     @JsonIgnore
     @OneToMany(mappedBy = "shop")
     private List<Product> products;
-    @JsonIgnore
-    @ManyToOne(targetEntity = User.class)
-    private User user;
 }

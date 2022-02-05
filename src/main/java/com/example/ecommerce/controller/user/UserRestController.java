@@ -45,9 +45,12 @@ public class UserRestController {
         }
         return new ResponseEntity<>(currentUser.get(), HttpStatus.OK);
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserEdit userEdit){
-        Optional<User> currentUser = userService.findById(id);
+    @PutMapping("/edit")
+    public ResponseEntity<User> updateUser(@RequestBody UserEdit userEdit){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<User> currentUser = userService.findByUsername(username);
         if (!currentUser.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -103,5 +106,24 @@ public class UserRestController {
             return new ResponseEntity<>("delete success", HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>("delete fails", HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/info")
+    public ResponseEntity<User> getInfo(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<User> currentUser = userService.findByUsername(username);
+        if (!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(currentUser.get(), HttpStatus.OK);
+    }
+    @GetMapping("/user/{myShopId}")
+    public ResponseEntity<User> findByMyShopId(@PathVariable Long myShopId){
+        Optional<User> currentUser = userService.findUserByMyShopId(myShopId);
+        if (!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(currentUser.get(), HttpStatus.OK);
     }
 }

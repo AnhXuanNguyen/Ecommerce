@@ -134,4 +134,43 @@ public class CartRestController {
         }
         return new ResponseEntity<>(cartService.save(currentCart.get()), HttpStatus.ACCEPTED);
     }
+    @GetMapping("/by-user")
+    public ResponseEntity<Cart> findByUser(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<User> currentUser = userService.findByUsername(username);
+        if(!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Optional<Cart> currentCart = cartService.findByUser(currentUser.get());
+        if (!currentCart.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(currentCart.get(), HttpStatus.OK);
+    }
+    @PutMapping("/item/{id}")
+    public ResponseEntity<Cart> deleteItemCartById(@PathVariable Long id){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<User> currentUser = userService.findByUsername(username);
+        if(!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Optional<Cart> currentCart = cartService.findByUser(currentUser.get());
+        if (!currentCart.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Optional<ItemCart> currentItemCart = iItemCartService.findById(id);
+        if (!currentItemCart.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        long money = currentCart.get().getTotalMoney() - (currentItemCart.get().getQuantity() * currentItemCart.get().getProduct().getPrice());
+        currentCart.get().setTotalMoney(money);
+        currentCart.get().getItemCarts().remove(currentItemCart.get());
+        iItemCartService.deleteById(id);
+        cartService.save(currentCart.get());
+        return new ResponseEntity<>(currentCart.get(), HttpStatus.OK);
+    }
 }

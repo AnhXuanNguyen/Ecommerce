@@ -4,6 +4,7 @@ import com.example.ecommerce.model.cart.Cart;
 import com.example.ecommerce.model.comment.Comment;
 import com.example.ecommerce.model.message.Message;
 import com.example.ecommerce.model.role.Role;
+import com.example.ecommerce.model.shop.MyShop;
 import com.example.ecommerce.model.shop.Shop;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,13 +38,14 @@ public class User {
     private String email;
     private String phone;
     private Double wallet;
+    private Double lockWallet;
     private String address;
     private LocalDate date;
     private String username;
     private String password;
     private Boolean status;
     @OneToMany(mappedBy = "user")
-    private List<Shop> shops;
+    private List<MyShop> shops;
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Message> messages;

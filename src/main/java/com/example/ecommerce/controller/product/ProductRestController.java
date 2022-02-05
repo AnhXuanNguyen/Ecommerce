@@ -4,6 +4,7 @@ import com.example.ecommerce.model.dto.product.ProductCreate;
 import com.example.ecommerce.model.dto.product.ProductEdit;
 import com.example.ecommerce.model.image.Image;
 import com.example.ecommerce.model.product.Product;
+import com.example.ecommerce.model.shop.Shop;
 import com.example.ecommerce.service.image.IImageService;
 import com.example.ecommerce.service.origin.IOriginService;
 import com.example.ecommerce.service.product.IProductService;
@@ -30,7 +31,7 @@ public class ProductRestController {
     private IImageService iImageService;
 
     @GetMapping
-    public ResponseEntity<Page<Product>> findAll(@PageableDefault(value = 9) Pageable pageable){
+    public ResponseEntity<Page<Product>> findAll(@PageableDefault(value = 8) Pageable pageable){
         return new ResponseEntity<>(productService.findAllPage(pageable), HttpStatus.OK);
     }
     @GetMapping("/{id}")
@@ -83,10 +84,10 @@ public class ProductRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id){
         productService.deleteById(id);
-        Optional<Product> currentProduct = productService.findById(id);
-        if (!currentProduct.isPresent()){
-            return new ResponseEntity<>("delete successfully", HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>("delete fails", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("delete success !!!", HttpStatus.NO_CONTENT);
+    }
+    @PutMapping("/my-shop")
+    public ResponseEntity<Page<Product>> findByShopId(@RequestBody Shop shop, @PageableDefault(value = 8) Pageable pageable){
+        return new ResponseEntity<>(productService.findAllByShop(shop,pageable), HttpStatus.OK);
     }
 }

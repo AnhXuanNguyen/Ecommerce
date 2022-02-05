@@ -16,13 +16,26 @@ public class JwtResponse {
     private String avatar;
     private String type = "Bearer";
     private String token;
+    private Double wallet;
+    private int totalItem;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public JwtResponse(String name, String username, String avatar, String token, Collection<? extends GrantedAuthority> authorities) {
+    public JwtResponse(String name, String username, String avatar, String token, Collection<? extends GrantedAuthority> authorities, int totalItem, Double wallet) {
         this.name = name;
         this.username = username;
         this.avatar = avatar;
         this.token = token;
         this.authorities = authorities;
+        this.totalItem = totalItem;
+        this.wallet = wallet;
+    }
+
+    public JwtResponse(String name, String username, String avatar, String token, Collection<? extends GrantedAuthority> authorities, Double wallet) {
+        this.name = name;
+        this.username = username;
+        this.avatar = avatar;
+        this.token = token;
+        this.authorities = authorities;
+        this.wallet = wallet;
     }
 }

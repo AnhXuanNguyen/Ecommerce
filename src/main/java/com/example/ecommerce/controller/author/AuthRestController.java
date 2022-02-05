@@ -22,12 +22,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/home")
+@RequestMapping("/auth")
 public class AuthRestController {
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,9 +53,12 @@ public class AuthRestController {
         cart.setName("Rỏ hàng của "+userRegister.getName());
         cart.setTotalMoney(0L);
         cart.setUser(user);
+        cart.setItemCarts(new ArrayList<>());
         cartService.save(cart);
         user.setWallet(0.0);
+        user.setLockWallet(0.0);
         user.setDate(LocalDate.now());
+        user.setStatus(false);
         user.setAvatar("https://firebasestorage.googleapis.com/v0/b/ecommerce-3990f.appspot.com/o/hinh-avatar-trang-cho-nam-va-con-than-lan.jpg?alt=media&token=e01f7e0e-a2a8-4152-b428-ff802ac56148");
         return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
@@ -69,6 +74,13 @@ public class AuthRestController {
         User currentUser = userService.findByUsername(jwtRequest.getUsername()).get();
         currentUser.setStatus(true);
         userService.save(currentUser);
-        return ResponseEntity.ok(new JwtResponse(currentUser.getName(), userDetails.getUsername(),currentUser.getAvatar(), token, userDetails.getAuthorities()));
+        Optional<Cart> cart = cartService.findByUser(currentUser);
+        for (Role role : currentUser.getRoles()){
+            if (role.getName() == EnumRoles.ROLE_ADMIN){
+                return ResponseEntity.ok(new JwtResponse(currentUser.getName(), userDetails.getUsername(),currentUser.getAvatar(), token, userDetails.getAuthorities(), currentUser.getWallet()));
+            }
+        }
+        int totalItem = cart.get().getItemCarts().size();
+        return ResponseEntity.ok(new JwtResponse(currentUser.getName(), userDetails.getUsername(),currentUser.getAvatar(), token, userDetails.getAuthorities(), totalItem, currentUser.getWallet()));
     }
 }

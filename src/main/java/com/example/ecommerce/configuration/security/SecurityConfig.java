@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.ecommerce.model.user.User;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,7 +88,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             User userAdmin = new User();
             Set<Role> rolesSet = new HashSet<>();
             rolesSet.add(new Role(1L, EnumRoles.ROLE_ADMIN));
+            userAdmin.setName("Admin");
             userAdmin.setUsername("admin");
+            userAdmin.setWallet(0D);
+            userAdmin.setDate(LocalDate.now());
+            userAdmin.setAvatar("https://firebasestorage.googleapis.com/v0/b/ecommerce-3990f.appspot.com/o/hinh-avatar-trang-cho-nam-va-con-than-lan.jpg?alt=media&token=e01f7e0e-a2a8-4152-b428-ff802ac56148");
             userAdmin.setPassword(new BCryptPasswordEncoder().encode("12345"));
             userAdmin.setRoles(rolesSet);
             userService.save(userAdmin);
