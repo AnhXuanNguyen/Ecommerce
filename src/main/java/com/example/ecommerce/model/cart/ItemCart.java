@@ -1,5 +1,6 @@
 package com.example.ecommerce.model.cart;
 
+import com.example.ecommerce.model.order.OrderProduct;
 import com.example.ecommerce.model.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,11 @@ public class ItemCart {
     private Long quantity;
     private LocalDate date;
     private String comment;
+    private Boolean status;
     @JsonIgnore
     @ManyToOne(targetEntity = Cart.class)
     private Cart cart;
+    @JsonIgnore
+    @ManyToOne(targetEntity = OrderProduct.class)
+    private OrderProduct orderProduct;
 }

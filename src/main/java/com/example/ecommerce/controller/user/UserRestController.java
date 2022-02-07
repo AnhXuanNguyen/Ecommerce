@@ -1,10 +1,12 @@
 package com.example.ecommerce.controller.user;
 
+import com.example.ecommerce.model.cart.Cart;
 import com.example.ecommerce.model.dto.user.UserChangeAvatar;
 import com.example.ecommerce.model.dto.user.UserChangePassword;
 import com.example.ecommerce.model.dto.user.UserEdit;
 import com.example.ecommerce.model.dto.user.UserRecharge;
 import com.example.ecommerce.model.user.User;
+import com.example.ecommerce.service.cart.ICartService;
 import com.example.ecommerce.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,8 @@ public class UserRestController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private ICartService cartService;
 
     @GetMapping
     public ResponseEntity<Page<User>> findAll(@PageableDefault(value = 4) Pageable pageable){
@@ -60,6 +64,12 @@ public class UserRestController {
         user.setPhone(userEdit.getPhone());
         user.setEmail(userEdit.getEmail());
         user.setAddress(userEdit.getAddress());
+        Optional<Cart> currentCart = cartService.findByUser(user);
+        if (!currentCart.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        currentCart.get().setName("Giỏ hàng của "+user.getName());
+        cartService.save(currentCart.get());
         return new ResponseEntity<>(userService.save(user), HttpStatus.ACCEPTED);
     }
     @PutMapping("/change-avatar")

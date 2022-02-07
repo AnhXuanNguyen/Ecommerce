@@ -81,6 +81,6 @@ public class AuthRestController {
             }
         }
         int totalItem = cart.get().getItemCarts().size();
-        return ResponseEntity.ok(new JwtResponse(currentUser.getName(), userDetails.getUsername(),currentUser.getAvatar(), token, userDetails.getAuthorities(), totalItem, currentUser.getWallet()));
+        return ResponseEntity.ok(new JwtResponse(currentUser.getName(), userDetails.getUsername(),currentUser.getAvatar(), token, userDetails.getAuthorities(), totalItem, currentUser.getWallet(), currentUser.getLockWallet()));
     }
 }

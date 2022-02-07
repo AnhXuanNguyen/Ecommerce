@@ -1,5 +1,6 @@
 package com.example.ecommerce.service.shop;
 
+import com.example.ecommerce.model.product.Product;
 import com.example.ecommerce.model.shop.Shop;
 import com.example.ecommerce.repository.IShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,10 @@ public class ShopService implements IShopService{
     @Override
     public void deleteById(Long id) {
         shopRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Shop> findByProducts(Product product) {
+        return shopRepository.findByProducts(product);
     }
 }

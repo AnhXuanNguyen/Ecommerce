@@ -135,4 +135,22 @@ public class ShopRestController {
         userService.save(currentUser.get());
         return new ResponseEntity<>(myShopService.save(myShop), HttpStatus.ACCEPTED);
     }
+    @PutMapping("/withdraw/{id}")
+    public ResponseEntity<Shop> withdrawByShop(@PathVariable Long id){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<User> currentUser = userService.findByUsername(username);
+        if (!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Optional<Shop> currentShop = shopService.findById(id);
+        if (!currentShop.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        currentUser.get().setWallet(currentUser.get().getWallet() + currentShop.get().getTurnover());
+        currentShop.get().setTurnover(0L);
+        userService.save(currentUser.get());
+        return new ResponseEntity<>(shopService.save(currentShop.get()), HttpStatus.ACCEPTED);
+    }
 }

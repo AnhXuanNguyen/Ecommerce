@@ -69,7 +69,7 @@ public class CartRestController {
         for (int i = 0; i < currentCart.get().getItemCarts().size(); i++){
             ItemCart itemCart = currentCart.get().getItemCarts().get(i);
             Product product = itemCartForm.getProduct();
-            if (itemCart.getProduct().getId() == product.getId()){
+            if (itemCart.getProduct().getId() == product.getId() && itemCart.getStatus() == false){
                 Long money = itemCart.getQuantity() * itemCart.getProduct().getPrice();
                 totalMoney -= money;
                 Long quantity = itemCartForm.getQuantity();
@@ -80,6 +80,8 @@ public class CartRestController {
                 currentCart.get().setTotalMoney(totalMoney);
                 check = true;
             }
+            itemCart.setCart(currentCart.get());
+            iItemCartService.save(itemCart);
         }
         if (check){
             return new ResponseEntity<>(cartService.save(currentCart.get()), HttpStatus.ACCEPTED);
@@ -89,6 +91,7 @@ public class CartRestController {
         itemCart.setComment(itemCartForm.getComment());
         itemCart.setProduct(itemCartForm.getProduct());
         itemCart.setQuantity(itemCartForm.getQuantity());
+        itemCart.setStatus(false);
         itemCart.setDate(LocalDate.now());
         currentCart.get().getItemCarts().add(itemCart);
         currentCart.get().setTotalMoney(currentCart.get().getTotalMoney()+(itemCartForm.getProduct().getPrice() * itemCartForm.getQuantity()));

@@ -3,6 +3,8 @@ package com.example.ecommerce.model.user;
 import com.example.ecommerce.model.cart.Cart;
 import com.example.ecommerce.model.comment.Comment;
 import com.example.ecommerce.model.message.Message;
+import com.example.ecommerce.model.notification.Notification;
+import com.example.ecommerce.model.order.OrderProduct;
 import com.example.ecommerce.model.role.Role;
 import com.example.ecommerce.model.shop.MyShop;
 import com.example.ecommerce.model.shop.Shop;
@@ -46,12 +48,17 @@ public class User {
     private Boolean status;
     @OneToMany(mappedBy = "user")
     private List<MyShop> shops;
+    @OneToMany(mappedBy = "user")
+    private List<Notification> notifications;
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Message> messages;
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<OrderProduct> orderProducts;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
