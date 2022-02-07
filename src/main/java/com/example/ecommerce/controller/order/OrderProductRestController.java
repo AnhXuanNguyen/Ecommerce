@@ -66,7 +66,7 @@ public class OrderProductRestController {
         if (!currentUser.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (orderProductCreate.getMoneyOrder() < currentUser.get().getWallet()){
+        if (orderProductCreate.getMoneyOrder() > currentUser.get().getWallet()){
             return new ResponseEntity<>("Không đủ tiền", HttpStatus.ACCEPTED);
         }
         Optional<Cart> currentCart = cartService.findByUser(currentUser.get());
@@ -166,6 +166,14 @@ public class OrderProductRestController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long id){
+        Optional<OrderProduct> currentOrder = orderProductService.findById(id);
+        if (!currentOrder.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User user = currentOrder.get().getUser();
+        user.setWallet(user.getWallet() + currentOrder.get().getMoneyOrder());
+        user.setLockWallet(user.getLockWallet() - currentOrder.get().getMoneyOrder());
+        userService.save(user);
         orderProductService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

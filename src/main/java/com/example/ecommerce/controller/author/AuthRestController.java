@@ -83,4 +83,16 @@ public class AuthRestController {
         int totalItem = cart.get().getItemCarts().size();
         return ResponseEntity.ok(new JwtResponse(currentUser.getName(), userDetails.getUsername(),currentUser.getAvatar(), token, userDetails.getAuthorities(), totalItem, currentUser.getWallet(), currentUser.getLockWallet()));
     }
+    @GetMapping("/logout")
+    public ResponseEntity<?>logout(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<User> currentUser = userService.findByUsername(username);
+        if (!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        currentUser.get().setStatus(false);
+        return new ResponseEntity<>(userService.save(currentUser.get()), HttpStatus.ACCEPTED);
+    }
 }
