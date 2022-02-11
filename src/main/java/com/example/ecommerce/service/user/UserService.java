@@ -1,5 +1,6 @@
 package com.example.ecommerce.service.user;
 
+import com.example.ecommerce.model.shop.Shop;
 import com.example.ecommerce.model.user.User;
 import com.example.ecommerce.model.user.UserPrincipal;
 import com.example.ecommerce.repository.IUserRepository;
@@ -58,5 +59,15 @@ public class UserService implements IUserService{
     @Override
     public Optional<User> findUserByMyShopId(Long myShopId) {
         return userRepository.findUserByMyShopId(myShopId);
+    }
+
+    @Override
+    public Iterable<User> findAllByUserBuyProduct(Long productId) {
+        return userRepository.findAllByUserBuyProduct(productId);
+    }
+
+    @Override
+    public Optional<User> findByShopId(Long shopId) {
+        return userRepository.findByShopId(shopId);
     }
 }

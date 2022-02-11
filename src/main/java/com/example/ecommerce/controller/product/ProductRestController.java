@@ -73,6 +73,7 @@ public class ProductRestController {
         }
         Product product = currentProduct.get();
         product.setName(productEdit.getName());
+        product.setQuantity(product.getQuantity() + productEdit.getQuantity());
         product.setPrice(productEdit.getPrice());
         product.setDescription(productEdit.getDescription());
         product.setOrigin(productEdit.getOrigin());

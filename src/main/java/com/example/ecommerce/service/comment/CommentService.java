@@ -1,8 +1,11 @@
 package com.example.ecommerce.service.comment;
 
 import com.example.ecommerce.model.comment.Comment;
+import com.example.ecommerce.model.product.Product;
 import com.example.ecommerce.repository.ICommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,5 +32,10 @@ public class CommentService implements ICommentService{
     @Override
     public void deleteById(Long id) {
         commentRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Comment> findAllByProduct(Product product, Pageable pageable) {
+        return commentRepository.findAllByProduct(product, pageable);
     }
 }

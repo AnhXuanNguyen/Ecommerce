@@ -1,5 +1,6 @@
 package com.example.ecommerce.service.user;
 
+import com.example.ecommerce.model.shop.Shop;
 import com.example.ecommerce.model.user.User;
 import com.example.ecommerce.service.IGeneralService;
 import org.springframework.data.domain.Page;
@@ -12,4 +13,6 @@ public interface IUserService extends IGeneralService<User>, UserDetailsService 
     Optional<User> findByUsername(String username);
     Page<User> findAllPage(Pageable pageable);
     Optional<User> findUserByMyShopId(Long myShopId);
+    Iterable<User> findAllByUserBuyProduct(Long productId);
+    Optional<User> findByShopId(Long shopId);
 }

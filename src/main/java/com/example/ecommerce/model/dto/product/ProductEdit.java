@@ -17,5 +17,6 @@ public class ProductEdit {
     private String description;
     private Origin origin;
     private String brand;
+    private Long quantity;
     private List<Category> categories;
 }

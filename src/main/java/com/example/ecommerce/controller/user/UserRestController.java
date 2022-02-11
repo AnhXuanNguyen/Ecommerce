@@ -5,6 +5,7 @@ import com.example.ecommerce.model.dto.user.UserChangeAvatar;
 import com.example.ecommerce.model.dto.user.UserChangePassword;
 import com.example.ecommerce.model.dto.user.UserEdit;
 import com.example.ecommerce.model.dto.user.UserRecharge;
+import com.example.ecommerce.model.shop.Shop;
 import com.example.ecommerce.model.user.User;
 import com.example.ecommerce.service.cart.ICartService;
 import com.example.ecommerce.service.user.IUserService;
@@ -131,6 +132,18 @@ public class UserRestController {
     @GetMapping("/user/{myShopId}")
     public ResponseEntity<User> findByMyShopId(@PathVariable Long myShopId){
         Optional<User> currentUser = userService.findUserByMyShopId(myShopId);
+        if (!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(currentUser.get(), HttpStatus.OK);
+    }
+    @GetMapping("/user-buyed/{productId}")
+    public ResponseEntity<Iterable<User>> findAllUserBuyer(@PathVariable Long productId){
+        return new ResponseEntity<>(userService.findAllByUserBuyProduct(productId), HttpStatus.OK);
+    }
+    @GetMapping("/user-shop/{shopId}")
+    public ResponseEntity<User> findByShops(@PathVariable Long shopId){
+        Optional<User> currentUser = userService.findByShopId(shopId);
         if (!currentUser.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
