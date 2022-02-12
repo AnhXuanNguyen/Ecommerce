@@ -4,6 +4,7 @@ import com.example.ecommerce.enums.EnumFollowShop;
 import com.example.ecommerce.enums.EnumShop;
 import com.example.ecommerce.enums.EnumShopType;
 import com.example.ecommerce.model.product.Product;
+import com.example.ecommerce.model.roomchat.RoomChat;
 import com.example.ecommerce.model.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,4 +38,7 @@ public class Shop {
     @JsonIgnore
     @OneToMany(mappedBy = "shop")
     private List<Product> products;
+    @JsonIgnore
+    @OneToMany(mappedBy = "shop")
+    private List<RoomChat> roomChats;
 }

@@ -6,6 +6,7 @@ import com.example.ecommerce.model.message.Message;
 import com.example.ecommerce.model.notification.Notification;
 import com.example.ecommerce.model.order.OrderProduct;
 import com.example.ecommerce.model.role.Role;
+import com.example.ecommerce.model.roomchat.RoomChat;
 import com.example.ecommerce.model.shop.MyShop;
 import com.example.ecommerce.model.shop.Shop;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -59,6 +60,9 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<OrderProduct> orderProducts;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<RoomChat> roomChats;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},

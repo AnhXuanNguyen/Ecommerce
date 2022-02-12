@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -84,6 +85,7 @@ public class ShopRestController {
             shop.setAvatar(shopCreate.getAvatar());
             shop.setTurnover(0L);
             shop.setType(EnumShopType.NORMAL);
+            shop.setRoomChats(new ArrayList<>());
             MyShop myShop = new MyShop();
             myShop.setShop(shopService.save(shop));
             myShop.setUser(currentUser.get());

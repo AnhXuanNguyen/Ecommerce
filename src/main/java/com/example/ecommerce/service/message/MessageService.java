@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.message;
 
 import com.example.ecommerce.model.message.Message;
+import com.example.ecommerce.model.roomchat.RoomChat;
 import com.example.ecommerce.repository.IMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,10 @@ public class MessageService implements IMessageService{
     @Override
     public void deleteById(Long id) {
         messageRepository.deleteById(id);
+    }
+
+    @Override
+    public Iterable<Message> findAllByRoomChat(RoomChat roomChat) {
+        return messageRepository.findAllByRoomChat(roomChat);
     }
 }

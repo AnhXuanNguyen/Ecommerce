@@ -23,6 +23,7 @@ public class Message {
     private LocalDate date;
     @ManyToOne(targetEntity = User.class)
     private User user;
+    private Boolean status;
     @JsonBackReference
     @ManyToOne(targetEntity = RoomChat.class)
     private RoomChat roomChat;

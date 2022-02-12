@@ -1,6 +1,8 @@
 package com.example.ecommerce.service.roomchat;
 
 import com.example.ecommerce.model.roomchat.RoomChat;
+import com.example.ecommerce.model.shop.Shop;
+import com.example.ecommerce.model.user.User;
 import com.example.ecommerce.repository.IRoomChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,5 +31,15 @@ public class RoomChatService implements IRoomChatService{
     @Override
     public void deleteById(Long id) {
         roomChatRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<RoomChat> findByShopIdAndUserId(Long shopId, Long userId) {
+        return roomChatRepository.findByShopIdAndUserId(shopId, userId);
+    }
+
+    @Override
+    public Iterable<RoomChat> findAllByShop(Shop shop) {
+        return roomChatRepository.findAllByShop(shop);
     }
 }
