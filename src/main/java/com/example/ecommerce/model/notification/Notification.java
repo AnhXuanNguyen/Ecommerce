@@ -17,6 +17,8 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
+    private String url;
+    private Boolean status;
     @JsonIgnore
     @ManyToOne(targetEntity = User.class)
     private User user;
